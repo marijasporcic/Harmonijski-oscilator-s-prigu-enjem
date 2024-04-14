@@ -28,7 +28,7 @@ t=0
 k=0.5
 Lo=0.9 
 m=0.02
-b=0.05
+b=0
 v0 = 0
 
 
@@ -74,7 +74,7 @@ scene.append_to_caption("\n")
 wtext(text="Početni položaj", align="center", color=color.black, height=0.25)
 scene.append_to_caption("\n")
 
-poc_pozicija=0.25
+poc_pozicija=0.25 #udaljenost od zida
 
 
 #Slider za početni položaj tijela --> udaljenost od zida
