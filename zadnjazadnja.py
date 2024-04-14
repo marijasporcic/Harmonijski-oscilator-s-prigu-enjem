@@ -25,9 +25,11 @@ scene.append_to_caption("\n")
 
 delta_t=0.0005 #rezultati ce bit tocniji sto je manji vremenski razmak
 t=0
+k0=0.5
 k=0.5
 Lo=1.5 
 m=0.02
+m0=m
 b=0
 v0 = 0
 
@@ -105,13 +107,12 @@ v=v0
 
 scene.append_to_caption("\n\n")
 
-def novi_pocetni_uvjeti(b): 
-    global tijelo, opruga, Lhat, x, ptijela, stol, v, v0, k, k0, m0, m, poc_pozicija
+def novi_pocetni_uvjeti(gumb): 
+    global tijelo, opruga, Lhat, x, ptijela, stol, v, v0, k, k0, m0, m, poc_pozicija, b
     
     v=v0
     k=k0
     m=m0
-    
     
     #brišem staro i crtam novo sve
     
