@@ -26,7 +26,7 @@ scene.append_to_caption("\n")
 delta_t=0.0005 #rezultati ce bit tocniji sto je manji vremenski razmak
 t=0
 k=0.5
-Lo=0.9 
+Lo=1.5 
 m=0.02
 b=0
 v0 = 0
@@ -67,14 +67,14 @@ def masa(d):
     b = 2 * m * beta
     
     opis_masa.text = ' m = '+'{:1.2f}'.format(ms.value)+"kg"+"\n\n"
-ms = slider(bind=masa,min=0.02,max=0.5,value=0.02)
+ms = slider(bind=masa,min=0.01,max=0.2,value=0.02)
 opis_masa = wtext(text=' m = '+'{:1.2f}'.format(ms.value)+"kg"+"\n\n")
 
 scene.append_to_caption("\n")
 wtext(text="Početni položaj", align="center", color=color.black, height=0.25)
 scene.append_to_caption("\n")
 
-poc_pozicija=0.25 #udaljenost od zida
+poc_pozicija=0.85 #udaljenost od zida
 
 
 #Slider za početni položaj tijela --> udaljenost od zida
@@ -129,7 +129,7 @@ def novi_x0_v0(b):
     tijelo=box(pos=vector(poc_pozicija,0,0), size=vector(0.1,0.1,0.1), color=color.blue, make_trail=False)
     stol=box(pos=vector(0,-0.05,0), size=vector(5,0.01,2), color=color.white, make_trail=False)
     zid=box(pos=vector(0,0.01,0), size=vector(0.01,0.5,0.5), color=color.white, make_trail=False)
-    opruga=helix(pos=vector(0,0,0), axis=tijelo.pos-zid.pos, radius=0.05)
+    opruga=helix(pos=vector(0,0,0), axis=tijelo.pos-zid.pos, radius=0.04)
     L=tijelo.pos
     Lhat=hat(L) #smjer
     x=mag(L)-Lo #produljenje
@@ -170,6 +170,8 @@ def iznos_konst(slide):
     koja_je_vrsta=""
     
     prigusenja=[", bez prigušenja", ", podkritično prigušeno", ", kritično prigušeno", ", nadkritično prigušeno"]
+    
+    #provjera prigušenja
     
     if a==0:
         indeks=0    
@@ -219,7 +221,7 @@ g1 = graph(xtitle="t/s", ytitle="x/m", width=500, height=300)
 fc = gcurve(color=color.red, graph=g1)
 
 #E-t graf
-# #energije mehanička, potencijalna, kinetička
+#energije mehanička, potencijalna, kinetička
 
 g2 = graph(xtitle="t/s", ytitle="E/J", width=500, height=300)
 
@@ -241,8 +243,8 @@ ac = gcurve(color=color.blue, graph=g4)
 #pauziranje i pokretanje
 
 running = True
-def Run(b): # b = button
-    global running, remember_dt, delta_t, L, Lhat, x, pamti_poc_poziciju
+def Run(b): # b = gumb
+    global running, remember_dt, delta_t, L, Lhat, x
     running = not running
     if running:
         b.text = "Pause"
@@ -259,7 +261,7 @@ button(text="Pause", pos=scene.title_anchor, bind=Run)
 while True:
     rate (200)
         
-            
+    #računanje svih energija i crtanje grafa za energije        
     Ke=0.5/m*mag(ptijela)**2
     Pe=0.5*k*x**2
     Emech=Pe+Ke
@@ -267,14 +269,16 @@ while True:
     Peblock.plot( pos=(t,Pe) )
     Emechblock.plot(pos=(t,Emech))
     
+    #računanje sila, trenutnog položaja tijela
+    
     Fopruge=-k*x*Lhat
     Fotpora=b*(-ptijela/m)
     ptijela=ptijela+(Fopruge+Fotpora)*delta_t
-    tijelo.pos=tijelo.pos+ptijela*delta_t/m
-    opruga.axis=tijelo.pos-zid.pos
+    tijelo.pos=tijelo.pos+ptijela*delta_t/m #updateanje pozicije tijela
+    opruga.axis=tijelo.pos-zid.pos #namiještanje izgleda opruge
     L=tijelo.pos
     Lhat=hat(L)
-    x=mag(L)-Lo
+    x=mag(L)-Lo#računanje pomaka tj. produljenja, udaljenosti od ravnotežnog položaja
     
     #za pomak, brzinu i akceleraciju graf
     akc = -b * v / m - k * x / m #prema formuli
