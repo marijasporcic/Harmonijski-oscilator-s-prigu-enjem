@@ -41,12 +41,9 @@ wtext(text="Konstanta opruge", align="center", color=color.black, height=0.25)
 scene.append_to_caption("\n")
 
 def konstanta(s):
-    global k, m, w0, beta, b
-    k = s.value
+    global k0
+    k0 = s.value
     
-    w0 = sqrt(k / m)
-    beta = a * w0
-    b = 2 * m * beta
     
     opis_konstanta.text = 'k = '+'{:1.2f}'.format(ks.value)+"N/m"+"\n\n"
 ks = slider(bind=konstanta,min=0.1,max=10,value=0.5)
@@ -59,12 +56,8 @@ scene.append_to_caption("\n")
 #Slider za masu tijela
 
 def masa(d):
-    global m, w0, beta, b, k
-    m = d.value
-    
-    w0 = sqrt(k / m)
-    beta = a * w0
-    b = 2 * m * beta
+    global m0
+    m0 = d.value
     
     opis_masa.text = ' m = '+'{:1.2f}'.format(ms.value)+"kg"+"\n\n"
 ms = slider(bind=masa,min=0.01,max=0.2,value=0.02)
@@ -95,7 +88,7 @@ wtext(text="Početna brzina", align="center", color=color.black, height=0.25)
 scene.append_to_caption("\n")
 
 def pocetna_brzina(iznos_brzine):
-    global v0, v
+    global v0
     
     v0 = iznos_brzine.value
     
@@ -108,14 +101,16 @@ opis_brzina = wtext(text=' v0 = '+'{:1.2f}'.format(brzinas.value)+"m/s"+"  ")
 v=v0
 
 
-#gumb za novi početni polozaj tijela
+#gumb za novi početne uvjete tijela
 
 scene.append_to_caption("\n\n")
 
-def novi_x0_v0(b): 
-    global tijelo, opruga, Lhat, x, ptijela, stol,v
+def novi_pocetni_uvjeti(b): 
+    global tijelo, opruga, Lhat, x, ptijela, stol, v, v0, k, k0, m0, m, poc_pozicija
     
     v=v0
+    k=k0
+    m=m0
     
     
     #brišem staro i crtam novo sve
@@ -125,6 +120,8 @@ def novi_x0_v0(b):
     opruga.visible=False
     del opruga
     
+    
+    
     ptijela=m*vector(v,0,0)#za brzinu 
     tijelo=box(pos=vector(poc_pozicija,0,0), size=vector(0.1,0.1,0.1), color=color.blue, make_trail=False)
     stol=box(pos=vector(0,-0.05,0), size=vector(5,0.01,2), color=color.white, make_trail=False)
@@ -133,10 +130,14 @@ def novi_x0_v0(b):
     L=tijelo.pos
     Lhat=hat(L) #smjer
     x=mag(L)-Lo #produljenje
+    
+    w0 = sqrt(k / m)
+    beta = a * w0
+    b = 2 * m * beta
         
     return
 
-button(text="Potvrdi x0 i v0", bind=novi_x0_v0)
+button(text="Potvrdi nove početne vrijednosti", bind=novi_pocetni_uvjeti)
 scene.append_to_caption("\n\n")
 
 
